@@ -1,0 +1,9 @@
+{
+	"name": "vijifactoryduplicate",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "515084e1-9000-48c4-a6bf-0b25524f6dda",
+		"tenantId": "ed324f8c-5883-4eca-a7b1-5594d646a95b"
+	}
+}

@@ -1,0 +1,92 @@
+{
+	"name": "DEVtoPROD",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "DEV",
+						"type": "DatasetReference"
+					},
+					"name": "DEV"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "Prod",
+						"type": "DatasetReference"
+					},
+					"name": "TOPROD"
+				}
+			],
+			"transformations": [
+				{
+					"name": "select1"
+				},
+				{
+					"name": "filter1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          {Row ID} as integer,",
+				"          {Order Priority} as string,",
+				"          Discount as double,",
+				"          {Unit Price} as double,",
+				"          {Shipping Cost} as double,",
+				"          {Customer ID} as integer,",
+				"          {Customer Name} as string,",
+				"          {Ship Mode} as string,",
+				"          {Customer Segment} as string,",
+				"          {Product Category} as string,",
+				"          {Product Sub-Category} as string,",
+				"          {Product Container} as string,",
+				"          {Product Name} as string,",
+				"          {Product Base Margin} as double,",
+				"          Country as string,",
+				"          Region as string,",
+				"          {State or Province} as string,",
+				"          City as string,",
+				"          {Postal Code} as integer,",
+				"          {Order Date} as date,",
+				"          {Ship Date} as date,",
+				"          Profit as double,",
+				"          {Quantity ordered new} as integer,",
+				"          Sales as double,",
+				"          {Order ID} as integer",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> DEV",
+				"DEV select(mapColumn(",
+				"          {Row ID},",
+				"          {Customer ID},",
+				"          {Customer Name},",
+				"          {Product Category},",
+				"          {Product Name},",
+				"          Country,",
+				"          City,",
+				"          {Order Date},",
+				"          Sales",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"select1 filter({Product Category}==\"Furniture\"&&City==\"New York City\") ~> filter1",
+				"filter1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     recreate:true,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> TOPROD"
+			]
+		}
+	}
+}
